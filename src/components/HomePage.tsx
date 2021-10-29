@@ -5,6 +5,7 @@ import {
   geoLocationData,
   setGeoLocation
 } from "../features/GeoLocation/geoLocationSlice";
+import { getCityWeatherData } from "../features/WeatherData/cityWeatherDataSlice";
 import { getCoordsWeatherData } from "../features/WeatherData/coordsWeatherData";
 import { setCoordsWeatherData } from "../features/WeatherData/coordsWeatherDataSlice";
 
@@ -14,11 +15,18 @@ export default function HomePage() {
   const getGeoData = async () => {
     const geoData = await getGeoLocation();
     dispatch(setGeoLocation(geoData));
+  };
+  const getCoordsData = async () => {
     const coordsWeatherData = await getCoordsWeatherData(geoCoords);
-    dispatch(setCoordsWeatherData(coordsWeatherData));
+    dispatch(setCoordsWeatherData(await coordsWeatherData));
   };
   useEffect(() => {
     getGeoData();
+    dispatch(getCityWeatherData("Budapest"));
   }, []);
+
+  useEffect(() => {
+    getCoordsData();
+  }, [geoCoords]);
   return <div></div>;
 }
